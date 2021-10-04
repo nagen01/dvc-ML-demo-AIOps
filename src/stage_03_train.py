@@ -24,15 +24,15 @@ def train(config_path, params_path):
     l1_ratio = params["model_params"]["ElasticNet"]["l1_ratio"]
 
     train = pd.read_csv(train_data_path)
-
+    print(train.head())
     train_y = train["quality"]
     train_x = train.drop("quality",axis=1)
 
     lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=random_state)
     model = lr.fit(train_x, train_y)
 
-    model_dir_path = config["artifacts"]["model_dir"]
-    model_dir = os.path.join(artifacts_dir,model_dir_path)
+    model_dir_name = config["artifacts"]["model_dir"]
+    model_dir = os.path.join(artifacts_dir,model_dir_name)
     create_directory([model_dir])
     model_filename = config["artifacts"]["model_filename"]
     model_path = os.path.join(model_dir, model_filename)

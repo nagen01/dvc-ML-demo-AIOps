@@ -1,12 +1,12 @@
 stages:
   load_data:
-    cmd: python src\stage_01_load_save.py --config=config\config.yaml
-    deps: 
-      - src\stage_01_load_save.py
-      - src\utils\all_utils.py
-      - config\config.yaml
+    cmd: python src/stage_01_load_save.py --config=config/config.yaml
+    deps:
+      - src/stage_01_load_save.py
+      - src/utils/all_utils.py
+      - config/config.yaml
     outs:
-      - artifacts\raw_local_dir\data.csv
+      - artifacts/raw_local_dir/data.csv
 
   split_data:
     cmd: python src/stage_02_split_data.py --config=config/config.yaml --params=params.yaml
@@ -14,6 +14,7 @@ stages:
       - src/stage_02_split_data.py
       - src/utils/all_utils.py
       - config/config.yaml
+      - artifacts/raw_local_dir/data.csv
     params:
       - base.random_state
       - base.test_size
@@ -33,4 +34,15 @@ stages:
       - model_params.ElasticNet.alpha
       - model_params.ElasticNet.l1_ratio
     outs:
-      - artifacts\model_dir\ElasticNet.model
+      - artifacts/model_dir/ElasticNet.model
+
+  evaluate:
+    cmd: python src/stage_04_evaluate.py --config=config/config.yaml --params=params.yaml
+    deps:
+      - src/stage_04_evaluate.py
+      - src/utils/all_utils.py
+      - config/config.yaml
+      - artifacts/split_data_dir/test.csv
+      - artifacts/model_dir/ElasticNet.model
+    outs:
+      - artifacts\report_dir\reports.json   
